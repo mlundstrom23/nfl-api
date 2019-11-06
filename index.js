@@ -18,8 +18,14 @@ app.get('/teams/:filter', (request, response) => {
 app.post('/teams', bodyParser.json(), (request, response) => {
     const { id, location, mascot, abbreviation, conference, division } = request.body
 
-    if (!location || !mascot || !abbreviation || !conference || !division) {
-        response.send('The following attributes are required: location, mascot, abbreviation, conference and division.')
+    if (
+       !location || 
+       !mascot || 
+       !abbreviation || 
+       !conference || 
+       !division
+    ) {
+      response.send('The following attributes are required: location, mascot, abbreviation, conference and division.')
     }
 
     const newTeam = { id, location, mascot, abbreviation, conference, division }
@@ -37,13 +43,17 @@ app.delete('/teams/:id', (request, response) => {
     // Look up the team
     // If it doesn't exist, return 404
     const team = teams.find(t => t.id === parseInt(request.params.id));
-    if (!team) response.status(404).send('The team with the given ID does not exist.')
 
+    if (!team) {
+        response.status(404).send('The team with the given ID does not exist.')
+
+    } else {
     // Otherwise, delete it
-    const index = teams.indexOf(team);
-    teams.splice(index, 1);
+        const index = teams.indexOf(team);
+        teams.splice(index, 1);
+    }
 
-    // Return the same team
+    // Return successful delete attempt message
     response.send('Successfully deleted the team with ID: ' + team.id)
 })
 
