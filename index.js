@@ -1,6 +1,10 @@
 const express = require('express')
+
+// Creating an instance of an Express application
 const app = express()
 const teams = require('./teams.json')
+
+// Middleware that takes a string and turns it into a JS object out of that string that we can use
 const bodyParser = require('body-parser')
 
 app.get('/teams', (request, response) => {
@@ -8,34 +12,43 @@ app.get('/teams', (request, response) => {
 })
 
 app.get('/teams/:filter', (request, response) => {
-    let team = teams.filter((team) => {
-        let filter = request.params.filter
-        return String(team.id) === filter || team.abbreviation === filter
+    let filter = request.params.filter
+    let result = teams.filter((team) => {
+        
+        // Or else String(team.id) === filter
+        return team.id == filter || 
+               team.abbreviation === filter ||
+               team.division === filter                  
     })
-    response.send(team)
+
+    // Just sends back locations
+    let locations = result.map((team) => {
+        return team.location
+    })
+    response.send(locations)
+    console.log(filter)
 })
 
 app.post('/teams', bodyParser.json(), (request, response) => {
-    const { id, location, mascot, abbreviation, conference, division } = request.body
+    const body = request.body
+
+    if (!body.id) {
+        body.id = teams.length + 1
+    }
 
     if (
-       !location || 
-       !mascot || 
-       !abbreviation || 
-       !conference || 
-       !division
+       !body.location || 
+       !body.mascot || 
+       !body.abbreviation || 
+       !body.conference || 
+       !body.division
     ) {
-      response.send('The following attributes are required: location, mascot, abbreviation, conference and division.')
+      response.status(400).send('The following attributes are required: location, mascot, abbreviation, conference and division.')
     }
 
-    const newTeam = { id, location, mascot, abbreviation, conference, division }
+    const newTeam = teams.concat(body)
 
-    if (!id) {
-        newTeam.id = teams.length + 1;
-    }
-
-    teams.push(newTeam)
-    console.log({newTeam})
+    console.log({body})
     response.send(newTeam)
 })
 
@@ -61,6 +74,6 @@ app.all('*', (request, response) => {
     response.send('404 - Not Found. Please be more specific.')
 })
 
-app.listen(5500, () => {
+app.listen(1337, () => {
     console.log('Server is up and running.')
 })
