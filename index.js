@@ -21,11 +21,11 @@ app.get('/teams/:filter', (request, response) => {
                team.division === filter                  
     })
 
-    // Just sends back locations
-    let locations = result.map((team) => {
+    // Just sends back locations when inputting any of the fields above
+    /*let locations = result.map((team) => {
         return team.location
-    })
-    response.send(locations)
+    })*/
+    response.send(result) // response.send(locations) to just send back location and uncomment lines 25-27
     console.log(filter)
 })
 
