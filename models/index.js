@@ -13,6 +13,8 @@ const connection = new Sequelize(config.database, config.username, config.passwo
     dialect: config.dialect,
 })
 
+//connection.authenticate()
+
 const Teams = TeamsModel(connection, Sequelize)
 
 // export an instance of the team model

@@ -12,7 +12,9 @@ const Op = require('sequelize').Op
 // Creating an instance of an Express application
 const app = express()
 
+
 app.get('/teams', async (request, response) => {
+    // Teams is from module.exports = { Teams, } in ./models/index.js 
     const teams = await models.Teams.findAll()
     response.send(teams)
 })
@@ -20,7 +22,7 @@ app.get('/teams', async (request, response) => {
 app.get('/teams/:filter', async (request, response) => {
     // Short-hand for const filter = request.params.filter
     const { filter } = request.params
-    const match = await models.Teams.findOne({
+    const match = await models.Teams.findAll({
         where: { [Op.or]: [{ id: filter },
                            { abbreviation: filter },
                            { division: filter }] }
@@ -45,11 +47,7 @@ app.post('/teams', bodyParser.json(), async (request, response) => {
       response.status(400).send('The following attributes are required: location, mascot, abbreviation, conference and division.')
     }
 
-    const newTeam = await models.Teams.create({ location,
-                                                mascot,
-                                                abbreviation,
-                                                conference,
-                                                division })
+    const newTeam = await models.Teams.create( body )
 
     response.status(201).send(newTeam);
 })
