@@ -45,11 +45,12 @@ app.post('/teams', bodyParser.json(), async (request, response) => {
        !body.division
     ) {
       response.status(400).send('The following attributes are required: location, mascot, abbreviation, conference and division.')
-    }
+    } else {
 
-    const newTeam = await models.Teams.create( body )
+        const newTeam = await models.Teams.create( body )
 
-    response.status(201).send(newTeam);
+        response.status(201).send(newTeam);
+    }    
 })
 
 app.listen(1337, () => {
