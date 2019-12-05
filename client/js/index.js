@@ -8,3 +8,7 @@ function startup() {
     // eslint-disable-next-line no-undef
     document.body.innerHTML = 'Taken Over on Startup</p>'    
 }
+
+window.onload = function () {
+    console.log('App has started up')
+};

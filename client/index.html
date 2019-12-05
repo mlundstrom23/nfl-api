@@ -7,10 +7,17 @@
     <link rel="stylesheet" type="text/css" href="/client/css/index.css" />
 </head>
 
-<body onload="startup()">
+<body>
 
 <h1>My First Heading</h1>
 <p>My first paragraph.</p>
+
+<form method="POST" action="/basic-info">
+    <label>Name: </label>
+    <input type="text" placeholder="enter your name" name="username">
+    <input type="text" placeholder="enter your age" name="age">
+    <input type="submit" value="Click Me">
+</form>
 
 </body>
 </html>
