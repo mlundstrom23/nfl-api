@@ -12,12 +12,24 @@ const Op = require('sequelize').Op
 // Creating an instance of an Express application
 const app = express()
 
-app.get('/teams', async (request, response) => {
+// this is required to tell express where static content can be delivered from
+// such as css and js for the client
+app.use('/client', express.static('client'))
+
+// used for sendFile
+app.use(express.static('client'))
+
+app.get('/', (request, response) => {
+    // this sendFile function works when we have used the static configuration first
+    response.sendFile('./client/index.html')
+})
+
+app.get('/api/teams', async (request, response) => {
     const teams = await models.Teams.findAll()
     response.send(teams)
 })
 
-app.get('/teams/:filter', async (request, response) => {
+app.get('/api/teams/:filter', async (request, response) => {
     // Short-hand for const filter = request.params.filter
     const { filter } = request.params
     const match = await models.Teams.findOne({
@@ -32,7 +44,7 @@ app.get('/teams/:filter', async (request, response) => {
     }
 })
 
-app.post('/teams', bodyParser.json(), async (request, response) => {
+app.post('/api/teams', bodyParser.json(), async (request, response) => {
     const body = request.body
 
     if (
